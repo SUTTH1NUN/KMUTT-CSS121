@@ -18,21 +18,38 @@ float MedianScore(struct Student student[], int size);
 float SDScore(struct Student student[], int size);
 void merge(int arr[], int left, int mid, int right);
 void mergesort(int arr[], int left, int right);
-
+void getgrade(struct Student student[], int size);
 
 int main(){
     struct Student student[10];
-    strcpy(student[0].name, "Kira");
-    student[0].score = 90;
-    strcpy(student[1].name, "Mary");
-    student[1].score = 95;    
-    strcpy(student[2].name, "Mary12");
-    student[2].score = 66;
-    MaxStudent(student, 3);
-    MinStudent(student, 3);
-    AvrScore(student, 3);
+    strcpy(student[0].name, "Kira1");
+    student[0].score = 80;
+    strcpy(student[1].name, "Mary1");
+    student[1].score = 45;    
+    strcpy(student[2].name, "chat1");
+    student[2].score = 67;
+    strcpy(student[3].name, "gpt1");
+    student[3].score = 80;
+    strcpy(student[4].name, "copi1");
+    student[4].score = 95;    
+    strcpy(student[5].name, "Kira2");
+    student[5].score = 64;
+    strcpy(student[6].name, "Mary2");
+    student[6].score = 56;    
+    strcpy(student[7].name, "chat2");
+    student[7].score = 77;
+    strcpy(student[8].name, "gpt2");
+    student[8].score = 46;
+    strcpy(student[9].name, "copi2");
+    student[9].score = 50;   
+
+    
+    MaxStudent(student, 10);
+    MinStudent(student, 10);
+    AvrScore(student, 10);
     float Medain = MedianScore(student, 3);
-    cout << SDScore(student, 3) << endl;
+    ModeScore(student, 10);
+    getgrade(student, 10);
 }
 
 void MaxStudent(struct Student student[], int size){
@@ -67,6 +84,31 @@ float AvrScore(struct Student student[], int size){
     return avr;
 }
 
+void ModeScore(struct Student student[], int size){
+    int score[size];
+    int Maxcount = 1, count = 1;
+    for(int i = 0; i < size; i++){
+        score[i] = student[i].score;
+    }
+    mergesort(score, 0, size-1);
+    int mode = score[0];
+    for(int j = 1; j < size; ++j){
+        if(score[j] == score[j-1]){
+            ++count;
+        }else{
+            if(count > Maxcount){
+                Maxcount = count;
+                mode = score[j - 1];
+            }
+            count = 1;
+        }
+    }
+    if(count > Maxcount){
+        mode = score[size -1];
+    }
+    cout << "Mode is : " << mode << endl;
+}
+
 float MedianScore(struct Student student[], int size){
     int score[size];
     for(int i = 0; i < size; i++){
@@ -87,18 +129,8 @@ float SDScore(struct Student student[], int size){
         variance += pow(student[i].score - avr, 2);
     }
     sd = sqrt(variance / (size - 1));
-
     return sd;
 }
-
-
-
-
-
-
-
-
-
 
 void mergesort(int arr[], int left, int right){
     if(left < right){
@@ -140,5 +172,32 @@ void merge(int arr[], int left, int mid, int right){
         arr[k] = R[j];
         j++;
         k++;
+    }
+}
+
+void getgrade(struct Student student[], int size){
+    float avr, sd;
+    char grade;
+    avr = AvrScore(student, size);
+    sd = SDScore(student, size);
+    float A = avr + (2*sd);
+    float B = avr + sd;
+    float C = avr;
+    float D = avr-sd;
+
+    for(int i = 0; i < size; i++){
+        int num = student[i].score;
+        if(num > A){
+            grade = 'A';
+        }else if(num <= A && num > B){
+            grade = 'B';
+        }else if(num <= B && num > C){
+            grade = 'C';
+        }else if(num <= C && num > D){
+            grade = 'D';
+        }else{
+            grade = 'F';
+        }
+        cout << "Name : " << student[i].name << " grade : " << grade << endl;
     }
 }
